@@ -17,7 +17,7 @@ function createSelectOptions(users) {
   
   const arrayOptions = [];
   
-  users.forEach(user => {
+  for(const user of users){
     const option = document.createElement('option');
     
     option.value = user.id;
@@ -25,7 +25,7 @@ function createSelectOptions(users) {
     option.textContent = user.name;
     
     arrayOptions.push(option);
-  });
+  }
   
   return arrayOptions;
 }
@@ -78,16 +78,16 @@ function deleteChildElements(parentElement) {
 function addButtonListeners() {
   const buttons = document.querySelectorAll('main button');
   
-  if(buttons.length > 0) {
-    buttons.forEach(button => {
+  if(buttons) {
+    for(const button of buttons) {
       const postId = button.dataset.postId;
       
       if(postId){
         button.addEventListener('click', function(event){
           toggleComments(event, postId);
-        }, false);
+        });
       }
-    });
+    }
   }
   
   return buttons;
@@ -96,13 +96,13 @@ function addButtonListeners() {
 function removeButtonListeners() {
   const buttons = document.querySelectorAll('main button');
   
-  buttons.forEach(button => {
+  for(const button of buttons) {
     const postId = button.dataset.id;
     
     if(postId){
-      button.removeEventListener('click', addButtonListeners());
+      button.removeEventListener('click', addButtonListeners);
     }
-  });
+  }
   
   return buttons;
 }
@@ -114,7 +114,7 @@ function createComments(comments) {
   
   const fragment = document.createDocumentFragment();
   
-  comments.forEach(comment => {
+  for(const comment of comments) {
     const article = document.createElement('article');
     
     const h3 = createElemWithText('h3', comment.name);
@@ -128,7 +128,7 @@ function createComments(comments) {
     article.appendChild(pEmail);
     
     fragment.appendChild(article);
-  });
+  };
   
   return fragment;
 }
@@ -143,9 +143,9 @@ function populateSelectMenu(users) {
   const options = createSelectOptions(users);
   
   if(options){
-    options.forEach(option => {
+    for(const option of options) {
       selectMenu.appendChild(option);
-    });
+    };
   }
   
   return selectMenu;
@@ -329,8 +329,9 @@ async function refreshPosts(posts) {
   }
 
   const removeButtons = removeButtonListeners();
-
-  const main = deleteChildElements('main');
+  
+  const mainElement = document.querySelector('main')
+  const main = deleteChildElements(mainElement);
 
   const fragment = await displayPosts(posts);
 
@@ -344,9 +345,9 @@ async function selectMenuChangeEventHandler(event) {
     return undefined;
   }
 
-  const selectMenu = event.target;
-
   const userId = event.target.value || 1;
+
+  const selectMenu = event.target;
 
   selectMenu.disabled = true;
 
@@ -367,6 +368,16 @@ async function initPage() {
   return [users, selectElement];
 }
 
-function initApp() {
+async function initApp() {
+  const [users, selectElement] = await initPage();
   
+  const selectMenu = document.getElementById('selectMenu');
+  
+  selectMenu.addEventListener('change', async(event) => {
+    await selectMenuChangeEventHandler(event);
+  });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  initApp();
+});
