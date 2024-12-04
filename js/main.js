@@ -345,17 +345,21 @@ async function selectMenuChangeEventHandler(event) {
     return undefined;
   }
 
-  const userId = event.target.value || 1;
-
   const selectMenu = event.target;
 
-  selectMenu.disabled = true;
+  const userId = selectMenu?.value === 'Employees' || !selectMenu?.value ? 1 : selectMenu?.value;
+
+  if(selectMenu !== undefined){
+    selectMenu.disabled = true;
+  }
 
   const posts = await getUserPosts(userId);
 
   const refreshPostsArray = await refreshPosts(posts);
 
-  selectMenu.disabled = false;
+  if(selectMenu){
+    selectMenu.disabled = false;
+  }
 
   return [userId, posts, refreshPostsArray];
 }
