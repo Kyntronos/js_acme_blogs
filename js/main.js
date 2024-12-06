@@ -128,7 +128,7 @@ function createComments(comments) {
     article.appendChild(pEmail);
     
     fragment.appendChild(article);
-  };
+  }
   
   return fragment;
 }
@@ -145,7 +145,7 @@ function populateSelectMenu(users) {
   if(options){
     for(const option of options) {
       selectMenu.appendChild(option);
-    };
+    }
   }
   
   return selectMenu;
